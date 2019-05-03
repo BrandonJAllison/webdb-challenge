@@ -12,19 +12,25 @@ router.get('/', (req, res) => {
     .catch(err => res.status(500).json({errorMessage: err}));
   });
 
-router.post('/:id', (req, res) => {
+ 
+  router.post('/', (req, res) => {
+    const { project_id, description, notes} = req.body;
 
-  const {id: project_id} = req.params;
-  const {description, notes} = req.body;
-  actionsModel.createAction({project_id, description, notes})
-  .then(action => {
-    res.status(201).json(action);
-  })
-  .catch(err => res.status(500).json({errorMessage: err}));
+    if(project_id && description.length <= 255 && description.length >= 1 && notes) {
+        actionsModel.createAction(req.body)
+            .then(result => {
+                res.status(201).json({ result });
+            })
+            .catch(err => {
+                res.status(500).json({ errorMessage: err});
+            });
+    } else {
+        res.status(401).json({errorMessage: err});
+    }
 });
-
-router.put('/:id', (req, res) => {
-
+  
+  router.put('/:id', (req, res) => {
+  
     const {id} = req.params;
     const {description, notes, completed} = req.body;
   
@@ -34,6 +40,7 @@ router.put('/:id', (req, res) => {
     })
     .catch(err => res.status(500).json({errorMessage: err}));
   });
+  
   
   router.delete('/:id', (req, res) => {
     const {id} = req.params;

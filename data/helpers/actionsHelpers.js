@@ -19,6 +19,7 @@ module.exports = {
     .update({notes, description, completed})
   },
 
+
   remove(id){
 
     let query = db('actions');
